@@ -10,16 +10,18 @@ namespace highcardlib
     {
     public:
 
-        Deck(int totalCardsPerSuit, bool supportWildcard);
-
         using Cards = std::vector<Card>;
 
+        Deck();
+        virtual ~Deck() = default;
+
         const auto& getCards() const noexcept { return m_cards; }
-        void shuffle();
+        
+        virtual void createDeck();
+        void addWildCard();
 
-    private:
+    protected:
         Cards m_cards{};
-
-        void createDeck(int totalCardsPerSuit, bool supportWildcard);
+        void shuffle();
     };
 }

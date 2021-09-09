@@ -1,4 +1,7 @@
+#include <assert.h>
+
 #include "HighCardLib/Dealer.hpp"
+#include "HighCardLib/DeckFactory.hpp"
 #include "UtilsLib/RandomNumberGenerator.hpp"
 
 namespace highcardlib
@@ -26,15 +29,30 @@ namespace highcardlib
 
         if (!m_availableCards.empty())
         {
+            // In order to obtain a random card, using the random number generator to obtain
+            // a random number within the specified range of 0 - no advancement and the total items
+            // in the vector - 1.
             auto randomCardAdvance = utilslib::RandomNumberGenerator::generateRandomNumber(
                 0, static_cast<int>(m_availableCards.size() - 1)
             );
 
+            // Set our iterator to the beginning.
             auto randomCard = m_availableCards.begin();
-            std::advance(randomCard, randomCardAdvance);
+            // If there is any advancement required, do it.
+            if (randomCardAdvance > 0)
+            {
+                std::advance(randomCard, randomCardAdvance);
+            }
+
+            // This shouldn't happen.
+            assert(randomCard != m_availableCards.end());
+
             if (randomCard != m_availableCards.end())
             {
+                // Populate the return object with the random card that has been picked.
                 card = *randomCard;
+
+                // Remove this card now so that it can't be picked again.
                 m_availableCards.erase(randomCard);
             }
         }
@@ -48,9 +66,12 @@ namespace highcardlib
 
         for (auto deckNumber = 0; deckNumber < m_gameConfig.getTotalDecks(); deckNumber++)
         {
-            auto deck = Deck{ m_gameConfig.getTotalCardsPerSuit(), m_gameConfig.getSupportWildcard() };
-            deck.shuffle();
-            const auto& cards = deck.getCards();
+            auto deck = DeckFactory::create(m_gameConfig.getTotalCardsPerSuit());
+            if (m_gameConfig.getSupportWildcard())
+            {
+                deck->addWildCard();
+            }
+            const auto& cards = deck->getCards();
             m_availableCards.insert(std::end(m_availableCards), std::begin(cards), std::end(cards));
         }
     }

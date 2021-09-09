@@ -5,9 +5,8 @@
 
 namespace highcardlib
 {
-    Card::Card() :  
-        m_rank{},
-        m_suit{ Suit::wildcard }
+    Card::Card() :
+        Card(0, Suit::undefined)
     {
     }
 
@@ -17,17 +16,54 @@ namespace highcardlib
     {
     }
 
+    Card Card::createWildCard()
+    {
+        return Card{ 0, Suit::wildcard };
+    }
+
     std::string Card::toString() const noexcept 
     {
-        /*auto mapping = std::unordered_map<Suit, std::string>{
-            { Suit::wildcard, u8"\u2605"},
-            { Suit::clubs, u8"\u2663"},
-            { Suit::diamonds, u8"\u2666"},
-            { Suit::hearts, u8"\u2665"},
-            { Suit::spades, u8"\u2660"}
-        };*/
+        std::stringstream fmt;
+        if (m_suit != Suit::wildcard)
+        {
+            fmt << getRankString() << " ";
+        }
+        fmt << getSuitString();
 
-        static auto mapping = std::unordered_map<Suit, std::string>{
+        return fmt.str();
+    }
+
+    std::string Card::getRankString() const
+    {
+        static auto ranks = std::unordered_map<int, std::string>{
+            { 1, "Ace"},
+            { 2, "Two"},
+            { 3, "Three"},
+            { 4, "Four"},
+            { 5, "Five"},
+            { 6, "Six"},
+            { 7, "Seven"},
+            { 8, "Eight"},
+            { 9, "Nine"},
+            { 10, "Ten"},
+            { 11, "Jack"},
+            { 12, "Queen"},
+            { 13, "King"}
+        };
+
+        auto rankString = std::to_string(m_rank);
+
+        if (const auto& findRank = ranks.find(m_rank); findRank != ranks.end())
+        {
+            rankString = findRank->second;
+        }
+
+        return rankString;
+    }
+
+    std::string Card::getSuitString() const
+    {
+        static auto suits = std::unordered_map<Suit, std::string>{
             { Suit::wildcard, "**"},
             { Suit::clubs, "Clubs"},
             { Suit::diamonds, "Diamonds"},
@@ -35,33 +71,13 @@ namespace highcardlib
             { Suit::spades, "Spades"}
         };
 
-        static auto pictureCards = std::unordered_map<int, std::string>{
-            { 11, "Jack"},
-            { 12, "Queen"},
-            { 13, "King"},
-            { 1, "Ace"}
-        };
+        std::string suitString = "Unknown";
 
-        auto str = std::string{};
-
-        if (const auto& findSuit = mapping.find(m_suit); findSuit != mapping.end())
+        if (const auto& findSuit = suits.find(m_suit); findSuit != suits.end())
         {
-            std::stringstream fmt;
-            if (m_suit != Suit::wildcard)
-            {
-                if (const auto& findRank = pictureCards.find(m_rank); findRank != pictureCards.end())
-                {
-                    fmt << findRank->second << " ";
-                }
-                else
-                {
-                    fmt << m_rank << " ";
-                }
-            }
-            fmt << findSuit->second;
-            str = fmt.str();
+            suitString = findSuit->second;
         }
 
-        return str;
+        return suitString;
     }
 }

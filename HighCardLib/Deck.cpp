@@ -5,15 +5,17 @@
 #include <random>
 
 #include "HighCardLib/Deck.hpp"
+#include "UtilsLib/RandomNumberGenerator.hpp"
 
 namespace highcardlib
 {
-    Deck::Deck(int totalCardsPerSuit, bool supportWildcard)
+    Deck::Deck()
     {
-        createDeck(totalCardsPerSuit, supportWildcard);
+        createDeck();
+        shuffle();
     }
 
-    void Deck::createDeck(int totalCardsPerSuit, bool supportWildcard)
+    void Deck::createDeck()
     {
         static constexpr std::array<Card::Suit, 4> allCardSuits = { 
             Card::Suit::clubs, 
@@ -24,16 +26,20 @@ namespace highcardlib
 
         for (auto cardSuit : allCardSuits)
         {
-            for (auto cardRank = 1; cardRank <= totalCardsPerSuit; cardRank++)
+            for (auto cardRank = 2; cardRank <= 13; cardRank++)
             {
                 m_cards.emplace_back(Card{ cardRank, cardSuit });
             }
         }
+    }
 
-        if (supportWildcard)
-        {
-            m_cards.emplace_back(Card{});
-        }
+    void Deck::addWildCard()
+    {
+        auto randomCardIndex = utilslib::RandomNumberGenerator::generateRandomNumber(
+            0, static_cast<int>(m_cards.size() - 1)
+        );
+
+        m_cards[randomCardIndex] = Card::createWildCard();
     }
 
     void Deck::shuffle()

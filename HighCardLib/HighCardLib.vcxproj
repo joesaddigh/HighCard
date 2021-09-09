@@ -20,18 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\HighCardLib\Card.hpp" />
+    <ClInclude Include="..\Include\HighCardLib\CustomDeck.hpp" />
     <ClInclude Include="..\Include\HighCardLib\Dealer.hpp" />
     <ClInclude Include="..\Include\HighCardLib\Deck.hpp" />
+    <ClInclude Include="..\Include\HighCardLib\DeckFactory.hpp" />
     <ClInclude Include="..\Include\HighCardLib\GameConfig.hpp" />
     <ClInclude Include="..\Include\HighCardLib\HighCardGame.hpp" />
     <ClInclude Include="..\Include\HighCardLib\Player.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CustomDeck.cpp" />
     <ClCompile Include="Dealer.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DeckFactory.cpp" />
     <ClCompile Include="GameConfig.cpp" />
-    <ClCompile Include="HighCardGame.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

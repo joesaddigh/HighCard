@@ -9,14 +9,18 @@ namespace highcardlib
     class Player
     {
     public:
-        
-        Player() = default;
-        Player(std::string name);
 
-        void dealtCard(const Card& card);
+        Player(std::string name, int playerNumber);
+
+        auto getName() const noexcept { return m_name; }
+        auto getPlayerNumber() const noexcept { return m_playerNumber; }
+        auto getDealtCard() const noexcept { return m_dealtCard; }
+
+        void setDealtCard(const Card& dealtCard) { m_dealtCard = dealtCard; }
     private:
 
         std::string m_name;
-        Card m_card;
+        int m_playerNumber;
+        Card m_dealtCard;
     };
 }
