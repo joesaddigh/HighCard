@@ -1,6 +1,8 @@
 #pragma once
 
 #include <array>
+#include <algorithm>
+#include <random>
 
 #include "HighCardLib/Deck.hpp"
 
@@ -32,5 +34,11 @@ namespace highcardlib
         {
             m_cards.emplace_back(Card{});
         }
+    }
+
+    void Deck::shuffle()
+    {
+        auto rng = std::default_random_engine{};
+        std::shuffle(std::begin(m_cards), std::end(m_cards), rng);
     }
 }

@@ -7,7 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HighCard", "HighCard\HighCa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HighCardLib", "HighCardLib\HighCardLib.vcxproj", "{CB67F3AA-AE64-4023-AF51-49D20CEDA57E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxproj", "{B088156F-4561-47B1-B166-B5DC43C84F0B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilsLib", "Utils\Utils.vcxproj", "{B088156F-4561-47B1-B166-B5DC43C84F0B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HighCardLibTests", "HighCardLibTests\HighCardLibTests.vcxproj", "{42F29087-903E-46A7-A904-262FFC9EDDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,12 @@ Global
 		{B088156F-4561-47B1-B166-B5DC43C84F0B}.Release|x64.Build.0 = Release|x64
 		{B088156F-4561-47B1-B166-B5DC43C84F0B}.Release|x86.ActiveCfg = Release|Win32
 		{B088156F-4561-47B1-B166-B5DC43C84F0B}.Release|x86.Build.0 = Release|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Debug|x64.ActiveCfg = Debug|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Debug|x86.ActiveCfg = Debug|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Debug|x86.Build.0 = Debug|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Release|x64.ActiveCfg = Release|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Release|x86.ActiveCfg = Release|Win32
+		{42F29087-903E-46A7-A904-262FFC9EDDD3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace highcardlib
 {
     class Card
@@ -8,7 +10,7 @@ namespace highcardlib
         
         enum class Suit
         {
-            none, clubs, diamonds, hearts, spades
+            wildcard, clubs, diamonds, hearts, spades
         };
 
         Card();
@@ -16,11 +18,10 @@ namespace highcardlib
 
         auto getRank() const noexcept { return m_rank; }
         auto getSuit() const noexcept { return m_suit; }
-        auto getWildcard() const noexcept { return m_wildcard; }
+        std::string toString() const noexcept;
 
     private:
         int m_rank{};
-        Suit m_suit{};
-        bool m_wildcard{};
+        Suit m_suit{ Suit::wildcard };
     };
 }

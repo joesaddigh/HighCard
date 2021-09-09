@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include "GameConfig.hpp"
 #include "Deck.hpp"
 
@@ -13,13 +11,13 @@ namespace highcardlib
 
         Dealer(const GameConfig& gameConfig);
 
-        std::optional<Card> dealCard();
+        Card dealCard();
 
     private:
         GameConfig m_gameConfig{};
         Deck::Cards m_availableCards{};
 
-        std::optional<Card> pickCard();
-        void shuffle();
+        Card pickCard();
+        void generateFreshDecks();
     };
 }

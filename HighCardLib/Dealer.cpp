@@ -7,22 +7,22 @@ namespace highcardlib
         m_gameConfig{ gameConfig },
         m_availableCards{}
     {
-        shuffle();
+        generateFreshDecks();
     };
 
-    std::optional<Card> Dealer::dealCard()
+    Card Dealer::dealCard()
     {
         if (m_availableCards.empty())
         {
-            shuffle();
+            generateFreshDecks();
         }
 
         return pickCard();
     }
 
-    std::optional<Card> Dealer::pickCard()
+    Card Dealer::pickCard()
     {
-        auto card = std::optional<Card>{};
+        auto card = Card{};
 
         if (!m_availableCards.empty())
         {
@@ -42,15 +42,16 @@ namespace highcardlib
         return card;
     }
 
-    void Dealer::shuffle()
+    void Dealer::generateFreshDecks()
     {
         m_availableCards.clear();
 
         for (auto deckNumber = 0; deckNumber < m_gameConfig.getTotalDecks(); deckNumber++)
         {
             auto deck = Deck{ m_gameConfig.getTotalCardsPerSuit(), m_gameConfig.getSupportWildcard() };
+            deck.shuffle();
             const auto& cards = deck.getCards();
-            m_availableCards.insert(m_availableCards.end(), cards.begin(), cards.end());
+            m_availableCards.insert(std::end(m_availableCards), std::begin(cards), std::end(cards));
         }
     }
 }

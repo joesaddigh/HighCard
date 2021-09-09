@@ -15,6 +15,7 @@ namespace highcardlib
         using Cards = std::vector<Card>;
 
         const auto& getCards() const noexcept { return m_cards; }
+        void shuffle();
 
     private:
         Cards m_cards{};
