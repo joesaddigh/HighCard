@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleHelper.cpp" />
     <ClCompile Include="HighCard.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,9 @@
     <ProjectReference Include="..\Utils\Utils.vcxproj">
       <Project>{b088156f-4561-47b1-b166-b5dc43c84f0b}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConsoleHelper.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
