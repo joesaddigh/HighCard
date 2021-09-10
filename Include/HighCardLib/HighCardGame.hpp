@@ -19,7 +19,7 @@ namespace highcardlib
 
         enum class PlayResult
         {
-            undefined, tie, playerOne, playerTwo
+            tie, playerOne, playerTwo
         };
 
         using OnCardDealt = std::function<void(const Player& player)>;
@@ -66,7 +66,7 @@ namespace highcardlib
     private:
 
         std::unique_ptr<DealerType> m_dealer{ nullptr };
-        GameConfig::TieResolveStrategy m_tieResolveStrategy{ GameConfig::TieResolveStrategy::faceValue };
+        GameConfig::TieResolveStrategy m_tieResolveStrategy{ GameConfig::TieResolveStrategy::allow };
         OnCardDealt m_onCardDealt{ nullptr };
         Player m_playerOne;
         Player m_playerTwo;
@@ -81,11 +81,11 @@ namespace highcardlib
                     playResult = handleTieSuitPrecedence();
                     break;
 
-                case GameConfig::TieResolveStrategy::newCard:
+                case GameConfig::TieResolveStrategy::dealNewCard:
                     playResult = handleTieRequestNewCard();
                     break;
 
-                case GameConfig::TieResolveStrategy::faceValue:
+                case GameConfig::TieResolveStrategy::allow:
                 default:
                     // Nothing to do, a tie is allowed.
                     break;
@@ -98,7 +98,7 @@ namespace highcardlib
         {
             auto playResult = PlayResult::tie;
 
-
+            // TODO
 
             return playResult;
         }
@@ -109,15 +109,15 @@ namespace highcardlib
 
             auto requestNewCard = true;
             auto attemptsToResolve = 0;
-            constexpr auto GIVE_UP = 100;
+            constexpr auto GIVE_UP = 20;
 
             do
             {
                 playResult = challengePlayers();
 
+                // Request a new card if it's a tie and we haven't exhausted our attempts to resolve the tie.
                 requestNewCard = 
-                    playResult == PlayResult::tie || 
-                    attemptsToResolve == GIVE_UP;
+                    playResult == PlayResult::tie && attemptsToResolve < GIVE_UP;
 
                 ++attemptsToResolve;
 
@@ -128,15 +128,16 @@ namespace highcardlib
 
         PlayResult challengePlayers()
         {
-            auto playResult = PlayResult::undefined;
-            
-            auto playerOneCard = m_dealer->dealCard();
-            m_playerOne.setDealtCard(playerOneCard);
-            m_onCardDealt(m_playerOne);
+            auto playResult = PlayResult::tie;
 
-            auto playerTwoCard = m_dealer->dealCard();
-            m_playerTwo.setDealtCard(playerTwoCard);
-            m_onCardDealt(m_playerTwo);
+            auto dealCard = [&](Player& player)
+            {
+                player.setDealtCard(m_dealer->dealCard());
+                m_onCardDealt(player);
+            };
+            
+            dealCard(m_playerOne);
+            dealCard(m_playerTwo);
 
             if (m_playerOne.getDealtCard() > m_playerTwo.getDealtCard())
             {
@@ -145,10 +146,6 @@ namespace highcardlib
             else if (m_playerTwo.getDealtCard() > m_playerOne.getDealtCard())
             {
                 playResult = PlayResult::playerTwo;
-            }
-            else
-            {
-                playResult = PlayResult::tie;
             }
 
             return playResult;

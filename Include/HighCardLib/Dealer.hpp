@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameConfig.hpp"
 #include "Deck.hpp"
 
 namespace highcardlib
@@ -9,12 +8,15 @@ namespace highcardlib
     {
     public:
 
-        Dealer(const GameConfig& gameConfig);
+        Dealer(int totalDecks, int totalCardsPerSuit, bool supportWildcard);
 
         Card dealCard();
 
     private:
-        GameConfig m_gameConfig{};
+        
+        int m_totalDecks{};
+        int m_totalCardsPerSuit{};
+        bool m_supportWildcard{};
         Deck::Cards m_availableCards{};
 
         Card pickCard();

@@ -14,7 +14,7 @@ namespace highcardlib
         };
 
         Card();
-        Card(int rank, Suit suit);
+        Card(std::string rankName, int rank, Suit suit);
 
         bool operator==(const Card& rhs) const
         {
@@ -47,10 +47,10 @@ namespace highcardlib
         std::string toString() const noexcept;
 
     private:
+        std::string m_rankName;
         int m_rank{};
         Suit m_suit{ Suit::wildcard };
 
-        std::string getRankString() const;
         std::string getSuitString() const;
     };
 }

@@ -6,8 +6,10 @@
 
 namespace highcardlib
 {
-    Dealer::Dealer(const GameConfig& gameConfig) :
-        m_gameConfig{ gameConfig },
+    Dealer::Dealer(int totalDecks, int totalCardsPerSuit, bool supportWildcard) :
+        m_totalDecks{ totalDecks }, 
+        m_totalCardsPerSuit{ totalCardsPerSuit }, 
+        m_supportWildcard{ supportWildcard },
         m_availableCards{}
     {
         generateFreshDecks();
@@ -64,10 +66,10 @@ namespace highcardlib
     {
         m_availableCards.clear();
 
-        for (auto deckNumber = 0; deckNumber < m_gameConfig.getTotalDecks(); deckNumber++)
+        for (auto deckNumber = 0; deckNumber < m_totalDecks; deckNumber++)
         {
-            auto deck = DeckFactory::create(m_gameConfig.getTotalCardsPerSuit());
-            if (m_gameConfig.getSupportWildcard())
+            auto deck = DeckFactory::create(m_totalCardsPerSuit);
+            if (m_supportWildcard)
             {
                 deck->addWildCard();
             }

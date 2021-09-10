@@ -6,11 +6,12 @@
 namespace highcardlib
 {
     Card::Card() :
-        Card(0, Suit::undefined)
+        Card("", 0, Suit::undefined)
     {
     }
 
-    Card::Card(int rank, Suit suit) :
+    Card::Card(std::string rankName, int rank, Suit suit) :
+        m_rankName{ std::move(rankName) },
         m_rank{ rank },
         m_suit{ suit }
     {
@@ -18,47 +19,16 @@ namespace highcardlib
 
     Card Card::createWildCard()
     {
-        return Card{ 0, Suit::wildcard };
+        return Card{ "Wildcard", INT_MAX, Suit::wildcard};
     }
 
     std::string Card::toString() const noexcept 
     {
         std::stringstream fmt;
-        if (m_suit != Suit::wildcard)
-        {
-            fmt << getRankString() << " ";
-        }
-        fmt << getSuitString();
+        fmt << m_rankName << " "
+            << getSuitString();
 
         return fmt.str();
-    }
-
-    std::string Card::getRankString() const
-    {
-        static auto ranks = std::unordered_map<int, std::string>{
-            { 1, "Ace"},
-            { 2, "Two"},
-            { 3, "Three"},
-            { 4, "Four"},
-            { 5, "Five"},
-            { 6, "Six"},
-            { 7, "Seven"},
-            { 8, "Eight"},
-            { 9, "Nine"},
-            { 10, "Ten"},
-            { 11, "Jack"},
-            { 12, "Queen"},
-            { 13, "King"}
-        };
-
-        auto rankString = std::to_string(m_rank);
-
-        if (const auto& findRank = ranks.find(m_rank); findRank != ranks.end())
-        {
-            rankString = findRank->second;
-        }
-
-        return rankString;
     }
 
     std::string Card::getSuitString() const

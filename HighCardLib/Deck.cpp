@@ -7,6 +7,31 @@
 #include "HighCardLib/Deck.hpp"
 #include "UtilsLib/RandomNumberGenerator.hpp"
 
+namespace
+{
+    struct RankMapping
+    {
+        int rank;
+        std::string name;
+    };
+
+    static auto ranks = std::array<RankMapping, 13>{{
+        { 2, "Two"},
+        { 3, "Three" },
+        { 4, "Four" },
+        { 5, "Five" },
+        { 6, "Six" },
+        { 7, "Seven" },
+        { 8, "Eight" },
+        { 9, "Nine" },
+        { 10, "Ten" },
+        { 11, "Jack" },
+        { 12, "Queen" },
+        { 13, "King" },
+        { 14, "Ace" }
+    }};
+}
+
 namespace highcardlib
 {
     Deck::Deck()
@@ -17,18 +42,11 @@ namespace highcardlib
 
     void Deck::createDeck()
     {
-        static constexpr std::array<Card::Suit, 4> allCardSuits = { 
-            Card::Suit::clubs, 
-            Card::Suit::diamonds,
-            Card::Suit::hearts,
-            Card::Suit::spades
-        };
-
-        for (auto cardSuit : allCardSuits)
+        for (auto cardSuit : { Card::Suit::clubs, Card::Suit::diamonds, Card::Suit::hearts, Card::Suit::spades })
         {
-            for (auto cardRank = 2; cardRank <= 13; cardRank++)
+            for (const auto& cardRank : ranks)
             {
-                m_cards.emplace_back(Card{ cardRank, cardSuit });
+                m_cards.emplace_back(Card{ cardRank.name, cardRank.rank, cardSuit });
             }
         }
     }
