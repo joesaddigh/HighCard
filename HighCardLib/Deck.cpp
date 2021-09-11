@@ -34,12 +34,6 @@ namespace
 
 namespace highcardlib
 {
-    Deck::Deck()
-    {
-        createDeck();
-        shuffle();
-    }
-
     void Deck::createDeck()
     {
         for (auto cardSuit : { Card::Suit::clubs, Card::Suit::diamonds, Card::Suit::hearts, Card::Suit::spades })
@@ -49,6 +43,7 @@ namespace highcardlib
                 m_cards.emplace_back(Card{ cardRank.name, cardRank.rank, cardSuit });
             }
         }
+        shuffle();
     }
 
     void Deck::addWildCard()

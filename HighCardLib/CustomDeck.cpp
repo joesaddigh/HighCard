@@ -22,5 +22,6 @@ namespace highcardlib
                 m_cards.emplace_back(Card{ std::to_string(cardRank), cardRank, cardSuit });
             }
         }
+        shuffle();
     }
 }

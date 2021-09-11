@@ -69,6 +69,7 @@ namespace highcardlib
         for (auto deckNumber = 0; deckNumber < m_totalDecks; deckNumber++)
         {
             auto deck = DeckFactory::create(m_totalCardsPerSuit);
+            deck->createDeck();
             if (m_supportWildcard)
             {
                 deck->addWildCard();

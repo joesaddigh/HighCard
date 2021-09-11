@@ -12,7 +12,7 @@ namespace highcardlib
 
         using Cards = std::vector<Card>;
 
-        Deck();
+        Deck() = default;
         virtual ~Deck() = default;
 
         const auto& getCards() const noexcept { return m_cards; }
