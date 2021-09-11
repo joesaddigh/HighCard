@@ -7,3 +7,5 @@ Release
 *.obj
 *.bak
 *.tmp
+/packages
+*.filters
