@@ -13,6 +13,27 @@ namespace
 {
     auto gameConfig = highcardlib::GameConfig::createDefault();
 
+    auto displayResults(
+        highcardlib::HighCardGame<>::PlayResult result,
+        const highcardlib::HighCardGame<>& highCardGame
+    )
+    {
+        switch (result)
+        {
+            case highcardlib::HighCardGame<>::PlayResult::tie:
+                ConsoleHelper::printTie();
+                break;
+
+            case highcardlib::HighCardGame<>::PlayResult::playerOne:
+                ConsoleHelper::printWinner(highCardGame.getPlayerOne());
+                break;
+
+            case highcardlib::HighCardGame<>::PlayResult::playerTwo:
+                ConsoleHelper::printWinner(highCardGame.getPlayerTwo());
+                break;
+        }
+    }
+
     auto play(
         const highcardlib::Player& playerOne, 
         const highcardlib::Player& playerTwo
@@ -32,21 +53,7 @@ namespace
         };
 
         auto result = highCardGame.play();
-
-        switch (result)
-        {
-            case highcardlib::HighCardGame<>::PlayResult::tie:
-                ConsoleHelper::printTie();
-                break;
-
-            case highcardlib::HighCardGame<>::PlayResult::playerOne:
-                ConsoleHelper::printWinner(highCardGame.getPlayerOne());
-                break;
-
-            case highcardlib::HighCardGame<>::PlayResult::playerTwo:
-                ConsoleHelper::printWinner(highCardGame.getPlayerTwo());
-                break;
-        }
+        displayResults(result, highCardGame);
     }
 }
 
