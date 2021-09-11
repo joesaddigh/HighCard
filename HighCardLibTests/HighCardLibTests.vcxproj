@@ -34,6 +34,8 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="CardTests.cpp" />
+    <ClCompile Include="GameConfigTests.cpp" />
+    <ClCompile Include="PlayerTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HighCardLib\HighCardLib.vcxproj">
