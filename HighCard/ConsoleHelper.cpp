@@ -18,6 +18,7 @@ namespace
         auto questionAnswered = false;
         std::string answer;
 
+        // Keep prompting the userthe validation has been fulfilled.
         while (!questionAnswered)
         {
             std::cout << question;
@@ -72,8 +73,7 @@ namespace
                         auto precedence = int{};
                         for (const auto& suit : suits)
                         {
-                            if (auto findSuit = allowedSuits.find(suit); 
-                                findSuit != allowedSuits.end())
+                            if (auto findSuit = allowedSuits.find(suit); findSuit != allowedSuits.end())
                             {
                                 suitPrecedence[findSuit->second] = precedence;
                                 precedence++;
@@ -179,10 +179,24 @@ void ConsoleHelper::printConfig(const highcardlib::GameConfig& gameConfig)
 
 highcardlib::Player ConsoleHelper::requestPlayer(int playerNumber)
 {
-    std::string playerName;
-    std::cout << "Please enter player" << playerNumber << " name: ";
-    std::getline(std::cin, playerName);
+    std::string playerName = askQuestion(
+        "Please enter player" + std::to_string(playerNumber) + " name: ",
+        [&](const std::string& answer) {
+            return !answer.empty();
+        }
+    );
     return highcardlib::Player{ playerName, playerNumber };
+}
+
+bool ConsoleHelper::requestPlayAgain()
+{
+    std::string playAgain = askQuestion(
+        "Would you like to play again? [y,n]",
+        [&](const std::string& answer) {
+            return highcardlib::UserInputValidator::validateYesNo(answer);
+        }
+    );
+    return highcardlib::UserInputValidator::yesNoToBool(playAgain);
 }
 
 void ConsoleHelper::printCardDealt(const highcardlib::Player& player)
@@ -195,8 +209,7 @@ void ConsoleHelper::printCardDealt(const highcardlib::Player& player)
 
 void ConsoleHelper::printTie()
 {
-    std::cout
-        << "It was a tie!" << std::endl;
+    std::cout << "It was a tie!" << std::endl;
 }
 
 void ConsoleHelper::printWinner(const highcardlib::Player& winner)

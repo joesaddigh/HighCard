@@ -14,6 +14,7 @@ public:
     static void requestRules(highcardlib::GameConfig& gameConfig);
     static void printConfig(const highcardlib::GameConfig& gameConfig);
     static highcardlib::Player requestPlayer(int playerNumber);
+    static bool requestPlayAgain();
     static void printCardDealt(const highcardlib::Player& player);
     static void printTie();
     static void printWinner(const highcardlib::Player& winner);

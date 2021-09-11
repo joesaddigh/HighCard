@@ -61,9 +61,12 @@ int main(int argc, char* argv[])
         auto playerOne = ConsoleHelper::requestPlayer(1);
         auto playerTwo = ConsoleHelper::requestPlayer(2);
 
-        play(playerOne, playerTwo);
-
-        system("pause");
+        auto playAgain = bool{};
+        do
+        {
+            play(playerOne, playerTwo);
+            playAgain = ConsoleHelper::requestPlayAgain();
+        } while (playAgain);
     }
     catch (const std::exception& exc)
     {
