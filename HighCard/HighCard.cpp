@@ -25,6 +25,7 @@ namespace
                 gameConfig.getAddWildcard()
             ),
             gameConfig.getTieResolveStrategy(),
+            gameConfig.getSuitPrecedence(),
             ConsoleHelper::printCardDealt,
             playerOne, 
             playerTwo 

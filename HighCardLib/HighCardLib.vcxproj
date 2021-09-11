@@ -27,6 +27,7 @@
     <ClInclude Include="..\Include\HighCardLib\GameConfig.hpp" />
     <ClInclude Include="..\Include\HighCardLib\HighCardGame.hpp" />
     <ClInclude Include="..\Include\HighCardLib\Player.hpp" />
+    <ClInclude Include="..\Include\HighCardLib\UserInputValidator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="DeckFactory.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="UserInputValidator.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

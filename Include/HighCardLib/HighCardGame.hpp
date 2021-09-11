@@ -13,7 +13,7 @@ namespace highcardlib
     template<
         typename DealerType = Dealer
     >
-    class HighCardGame
+        class HighCardGame
     {
     public:
 
@@ -27,12 +27,14 @@ namespace highcardlib
         HighCardGame(
             std::unique_ptr<DealerType> dealer,
             GameConfig::TieResolveStrategy tieResolveStrategy,
+            GameConfig::SuitPrecedence suitPrecedence,
             OnCardDealt onCardDealt,
-            const Player& playerOne, 
+            const Player& playerOne,
             const Player& playerTwo
         ) :
             m_dealer{ std::move(dealer) },
             m_tieResolveStrategy{ tieResolveStrategy },
+            m_suitPrecedence{std::move(suitPrecedence)},
             m_onCardDealt{ onCardDealt },
             m_playerOne{ playerOne },
             m_playerTwo{ playerTwo }
@@ -67,6 +69,7 @@ namespace highcardlib
 
         std::unique_ptr<DealerType> m_dealer{ nullptr };
         GameConfig::TieResolveStrategy m_tieResolveStrategy{ GameConfig::TieResolveStrategy::allow };
+        GameConfig::SuitPrecedence m_suitPrecedence{};
         OnCardDealt m_onCardDealt{ nullptr };
         Player m_playerOne;
         Player m_playerTwo;
@@ -98,7 +101,27 @@ namespace highcardlib
         {
             auto playResult = PlayResult::tie;
 
-            // TODO
+            auto getSuitPrecedence = [&](Card::Suit suit) {
+                auto suitPrecedence = 0;
+                if (auto findSuitPrecedence = m_suitPrecedence.find(suit);
+                    findSuitPrecedence != m_suitPrecedence.end())
+                {
+                    suitPrecedence = findSuitPrecedence->second;
+                }
+                return suitPrecedence;
+            };
+
+            auto playerOneSuitPrecedence = getSuitPrecedence(m_playerOne.getDealtCard().getSuit());
+            auto playerTwoSuitPrecedence = getSuitPrecedence(m_playerTwo.getDealtCard().getSuit());
+
+            if (playerOneSuitPrecedence > playerTwoSuitPrecedence)
+            {
+                playResult = PlayResult::playerOne;
+            }
+            else if (playerTwoSuitPrecedence > playerOneSuitPrecedence)
+            {
+                playResult = PlayResult::playerTwo;
+            }
 
             return playResult;
         }

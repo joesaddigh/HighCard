@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\UtilsLib\RandomNumberGenerator.hpp" />
+    <ClInclude Include="..\Include\UtilsLib\StringUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RandomNumberGenerator.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

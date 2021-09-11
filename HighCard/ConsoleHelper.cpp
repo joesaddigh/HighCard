@@ -1,38 +1,17 @@
+#include <sstream>
 #include <iostream>
 #include <unordered_map>
 #include <functional>
 
 #include "ConsoleHelper.hpp"
 #include "HighCardLib/Player.hpp"
+#include "HighCardLib/UserInputValidator.hpp"
+#include "UtilsLib/StringUtils.hpp"
 
 namespace
 {
-    auto yesNoToBool(const std::string& yesNo)
-    {
-        return yesNo == "y";
-    }
-
-    auto isNumber(const std::string str)
-    {
-        return !str.empty() &&
-            std::find_if(str.begin(), str.end(), [](unsigned char c) {
-            return !std::isdigit(c);
-                }) == str.end();
-    }
-
-    auto isNumberWithinRange(const std::string& str, int min, int max)
-    {
-        auto numberWithinRange = bool{};
-        if (isNumber(str))
-        {
-            auto number = std::stoi(str);
-            numberWithinRange = number >= min && number <= max;
-        }
-        return numberWithinRange;
-    }
-
     auto askQuestion(
-        const std::string& question,
+        std::string_view question,
         std::function<bool(const std::string&)> validate
     )
     {
@@ -49,6 +28,128 @@ namespace
 
         return answer;
     }
+
+    auto requestAndSetTieResolve(highcardlib::GameConfig& gameConfig)
+    {
+        static auto tieResolveMapping = std::unordered_map<std::string, highcardlib::GameConfig::TieResolveStrategy>{
+            {"ALLOW", highcardlib::GameConfig::TieResolveStrategy::allow},
+            {"SUITPRECEDENCE", highcardlib::GameConfig::TieResolveStrategy::suitPrecedence},
+            {"DEALNEWCARD", highcardlib::GameConfig::TieResolveStrategy::dealNewCard}
+        };
+
+        askQuestion(
+            "How would you like to resolve ties? [Allow/SuitPrecedence/DealNewCard]",
+            [&](const std::string& answer) {
+                auto upper = utilslib::StringUtils::toUpper(answer);
+                if (auto findTieResolve = tieResolveMapping.find(upper);
+                    findTieResolve != tieResolveMapping.end())
+                {
+                    gameConfig.setTieResolveStrategy(findTieResolve->second);
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        if (gameConfig.getTieResolveStrategy() == highcardlib::GameConfig::TieResolveStrategy::suitPrecedence)
+        {
+            static auto allowedSuits = std::unordered_map<std::string, highcardlib::Card::Suit>{
+                {"C", highcardlib::Card::Suit::clubs},
+                {"D", highcardlib::Card::Suit::diamonds},
+                {"H", highcardlib::Card::Suit::hearts},
+                {"S", highcardlib::Card::Suit::spades}
+            };
+
+            askQuestion(
+                "Please enter the order of suit precedence, in ascending order. For example Clubs, Diamonds, Hearts, Spades, would be entered like so, C,D,H,S:",
+                [&](const std::string& answer) {
+                    auto valid = bool{};
+                    auto suits = utilslib::StringUtils::splitString(answer, ',');
+                    // All suits must be defined.
+                    if (suits.size() == 4)
+                    {
+                        auto suitPrecedence = highcardlib::GameConfig::SuitPrecedence{};
+                        auto precedence = int{};
+                        for (const auto& suit : suits)
+                        {
+                            if (auto findSuit = allowedSuits.find(suit); 
+                                findSuit != allowedSuits.end())
+                            {
+                                suitPrecedence[findSuit->second] = precedence;
+                                precedence++;
+                                valid = true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+
+                        if (valid)
+                        {
+                            gameConfig.setSuitPrecedence(suitPrecedence);
+                        }
+                    }
+                    return valid;
+                }
+            );
+        }
+    }
+
+    auto requestAndSetTotalDecks(highcardlib::GameConfig& gameConfig)
+    {
+        askQuestion(
+            "How many decks would you like to use? [1 - 10]",
+            [&](const std::string& answer) {
+                if (highcardlib::UserInputValidator::isNumberWithinRange(answer, 1, 10))
+                {
+                    gameConfig.setTotalDecks(std::stoi(answer));
+                    return true;
+                }
+                return false;
+            }
+        );
+    }
+
+    auto requestAndSetAddWildCard(highcardlib::GameConfig& gameConfig)
+    {
+        askQuestion(
+            "Would you like to substitute one of the cards in a deck with a wildcard (beats all others)? [y,n]",
+            [&](const std::string& answer) {
+                if (highcardlib::UserInputValidator::validateYesNo(answer))
+                {
+                    gameConfig.setAddWildcard(highcardlib::UserInputValidator::yesNoToBool(answer));
+                    return true;
+                }
+                return false;
+            }
+        );
+    }
+
+    auto requestAndSetCustomDeck(highcardlib::GameConfig& gameConfig)
+    {
+        std::string customDeckOfCards = askQuestion(
+            "Would you like to use a custom deck of cards? [y,n]",
+            [&](const std::string& answer) {
+                return highcardlib::UserInputValidator::validateYesNo(answer);
+            }
+        );
+
+        if (highcardlib::UserInputValidator::yesNoToBool(customDeckOfCards))
+        {
+            std::string totalCardsPerSuit = askQuestion(
+                "How many cards per suit would you like to have? [1-100]",
+                [&](const std::string& answer) {
+                    if (highcardlib::UserInputValidator::isNumberWithinRange(answer, 1, 100))
+                    {
+                        gameConfig.setTotalCardsPerSuit(std::stoi(answer));
+                        return true;
+                    }
+                    return false;
+                }
+            );
+        }
+    }
 }
 
 void ConsoleHelper::printBanner()
@@ -63,57 +164,10 @@ void ConsoleHelper::printBanner()
 
 void ConsoleHelper::requestRules(highcardlib::GameConfig& gameConfig)
 {
-    static auto tieResolveMapping = std::unordered_map<std::string, highcardlib::GameConfig::TieResolveStrategy>{
-            {"Allow", highcardlib::GameConfig::TieResolveStrategy::allow},
-            {"SuitPrecedence", highcardlib::GameConfig::TieResolveStrategy::suitPrecedence},
-            {"DealNewCard", highcardlib::GameConfig::TieResolveStrategy::dealNewCard}
-    };
-
-    std::string tieResolve = askQuestion(
-        "How would you like to resolve ties? [Allow/SuitPrecedence/DealNewCard]",
-        [](const std::string& answer) {
-            return tieResolveMapping.find(answer) != tieResolveMapping.end();
-        }
-    );
-    gameConfig.setTieResolveStrategy(tieResolveMapping[tieResolve]);
-
-    std::string totalDecks = askQuestion(
-        "How many decks would you like to use? [1 - 10]",
-        [](const std::string& answer) {
-            return isNumberWithinRange(answer, 1, 10);
-        }
-    );
-    gameConfig.setTotalDecks(std::stoi(totalDecks));
-
-    std::string addWildCard = askQuestion(
-        "Would you like to make one of the cards across all of the decks a wilcard? [y,n]",
-        [](const std::string& answer) {
-            return
-                answer == "y" ||
-                answer == "n";
-        }
-    );
-    gameConfig.setAddWildcard(yesNoToBool(addWildCard));
-
-    std::string customDeckOfCards = askQuestion(
-        "Would you like to use a custom deck of cards? [y,n]",
-        [](const std::string& answer) {
-            return
-                answer == "y" ||
-                answer == "n";
-        }
-    );
-
-    if (yesNoToBool(customDeckOfCards))
-    {
-        std::string totalCardsPerSuit = askQuestion(
-            "How many cards per suit would you like to have? [1-100]",
-            [](const std::string& answer) {
-                return isNumberWithinRange(answer, 1, 100);
-            }
-        );
-        gameConfig.setTotalCardsPerSuit(std::stoi(totalCardsPerSuit));
-    }
+    requestAndSetTieResolve(gameConfig);
+    requestAndSetTotalDecks(gameConfig);
+    requestAndSetAddWildCard(gameConfig);
+    requestAndSetCustomDeck(gameConfig);
 }
 
 void ConsoleHelper::printConfig(const highcardlib::GameConfig& gameConfig)
