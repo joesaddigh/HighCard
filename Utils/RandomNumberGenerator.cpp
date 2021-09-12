@@ -6,9 +6,16 @@ namespace utilslib
 {
     int RandomNumberGenerator::generateRandomNumber(int min, int max)
     {
-        std::random_device rd{};
-        std::default_random_engine eng(rd());
-        std::uniform_int_distribution<int> distr(min, max);
-        return distr(eng);
+        auto result = int{};
+
+        // Protect against invalid range.
+        if (min < max)
+        {
+            std::random_device rd{};
+            std::default_random_engine eng(rd());
+            std::uniform_int_distribution<int> distr(min, max);
+            result = distr(eng);
+        }
+        return result;
     }
 }

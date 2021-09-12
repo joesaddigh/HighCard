@@ -13,7 +13,10 @@ namespace utilslib
         {
             std::string substr;
             getline(ss, substr, delimeter);
-            result.push_back(substr);
+            if (!substr.empty())
+            {
+                result.push_back(substr);
+            }
         }
         return result;
     }

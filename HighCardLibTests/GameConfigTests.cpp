@@ -7,6 +7,20 @@ namespace hc = highcardlib;
 
 namespace highcardlibtests
 {
+	template <typename Map>
+	bool mapCompare(Map const& lhs, Map const& rhs) {
+
+		auto pred = [](auto a, auto b)
+		{ 
+			return
+				a.first == b.first &&
+				a.second == b.second;
+		};
+
+		return lhs.size() == rhs.size()
+			&& std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+	}
+
 	// Constructor tests
 	TEST(GameConfigTests, constructor_noParams_configIsInitialised)
 	{
@@ -30,6 +44,12 @@ namespace highcardlibtests
 		constexpr auto totalDecks = 57;
 		constexpr auto addWildCard = true;
 		constexpr auto totalCardsPerSuit = 25;
+		auto suitPrecedenceToSet = hc::GameConfig::SuitPrecedence{			
+			{hc::Card::Suit::clubs, 1},
+			{hc::Card::Suit::diamonds, 2},
+			{hc::Card::Suit::spades, 3},
+			{hc::Card::Suit::hearts, 4},
+		};
 
 		auto gameConfig = hc::GameConfig{};
 
@@ -38,26 +58,16 @@ namespace highcardlibtests
 		gameConfig.setTotalDecks(totalDecks);
 		gameConfig.setAddWildcard(addWildCard);
 		gameConfig.setTotalCardsPerSuit(totalCardsPerSuit);
-		gameConfig.setSuitPrecedence(hc::GameConfig::SuitPrecedence{
-			{hc::Card::Suit::clubs, 1},
-			{hc::Card::Suit::diamonds, 2},
-			{hc::Card::Suit::spades, 3},
-			{hc::Card::Suit::hearts, 4},
-		});
+		gameConfig.setSuitPrecedence(suitPrecedenceToSet);
 
 		// ASSERT
 		ASSERT_EQ(gameConfig.getTieResolveStrategy(), tieResolveStrategy);
 		ASSERT_EQ(gameConfig.getTotalDecks(), totalDecks);
 		ASSERT_EQ(gameConfig.getAddWildcard(), addWildCard);
 		ASSERT_EQ(gameConfig.getTotalCardsPerSuit(), totalCardsPerSuit);
-		
-		auto suitPrecedence = gameConfig.getSuitPrecedence();
-		ASSERT_FALSE(suitPrecedence.empty());
-		ASSERT_EQ(suitPrecedence.size(), 4);
-		ASSERT_EQ(suitPrecedence[hc::Card::Suit::clubs], 1);
-		ASSERT_EQ(suitPrecedence[hc::Card::Suit::diamonds], 2);
-		ASSERT_EQ(suitPrecedence[hc::Card::Suit::spades], 3);
-		ASSERT_EQ(suitPrecedence[hc::Card::Suit::hearts], 4);
+		ASSERT_TRUE(
+			mapCompare<hc::GameConfig::SuitPrecedence>(gameConfig.getSuitPrecedence(), suitPrecedenceToSet)
+		);
 	}
 
 	TEST(GameConfigTests, createDefault_returnsExpectedValues)
