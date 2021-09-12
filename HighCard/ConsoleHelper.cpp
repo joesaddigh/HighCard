@@ -72,9 +72,9 @@ namespace
                 [&](const std::string& answer) {
                     auto valid = bool{};
                     auto suits = utilslib::StringUtils::splitString(answer, ',');
-                    // All suits must be defined.
-                    if (suits.size() == 4)
+                    if (highcardlib::UserInputValidator::validateSuitPrecedence(suits))
                     {
+                        valid = true;
                         auto suitPrecedence = highcardlib::GameConfig::SuitPrecedence{};
                         auto precedence = int{};
                         for (const auto& suit : suits)
@@ -83,19 +83,11 @@ namespace
                             {
                                 suitPrecedence[findSuit->second] = precedence;
                                 precedence++;
-                                valid = true;
-                            }
-                            else
-                            {
-                                return false;
                             }
                         }
-
-                        if (valid)
-                        {
-                            gameConfig.setSuitPrecedence(suitPrecedence);
-                        }
+                        gameConfig.setSuitPrecedence(suitPrecedence);
                     }
+
                     return valid;
                 }
             );

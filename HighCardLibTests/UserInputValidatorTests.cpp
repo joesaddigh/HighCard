@@ -232,4 +232,46 @@ namespace highcardlibtests
 		// ASSERT
 		ASSERT_FALSE(result);
 	}
+
+	TEST(UserInputValidatorTests, validateSuitPrecedence_withAllSuits_returnsTrue)
+	{
+		// ARRANGE
+		auto suits = utilslib::StringUtils::StringSplit{
+			"C", "D", "H", "S"
+		};
+
+		// ACT
+		auto result = hc::UserInputValidator::validateSuitPrecedence(suits);
+
+		// ASSERT
+		ASSERT_TRUE(result);
+	}
+
+	TEST(UserInputValidatorTests, validateSuitPrecedence_withInsufficientSuits_returnsFalse)
+	{
+		// ARRANGE
+		auto suits = utilslib::StringUtils::StringSplit{
+			"C", "D", "H"
+		};
+
+		// ACT
+		auto result = hc::UserInputValidator::validateSuitPrecedence(suits);
+
+		// ASSERT
+		ASSERT_FALSE(result);
+	}
+
+	TEST(UserInputValidatorTests, validateSuitPrecedence_withRepeatedSuits_returnsFalse)
+	{
+		// ARRANGE
+		auto suits = utilslib::StringUtils::StringSplit{
+			"C", "D", "H", "H"
+		};
+
+		// ACT
+		auto result = hc::UserInputValidator::validateSuitPrecedence(suits);
+
+		// ASSERT
+		ASSERT_FALSE(result);
+	}
 }

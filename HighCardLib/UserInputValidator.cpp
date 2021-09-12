@@ -34,4 +34,26 @@ namespace highcardlib
         auto upper = utilslib::StringUtils::toUpper(yesNo);
         return upper == "Y";
     }
+
+    bool UserInputValidator::validateSuitPrecedence(const utilslib::StringUtils::StringSplit& suits)
+    {
+        auto valid = bool{};
+        if (suits.size() == 4)
+        {
+            auto findSuit = [&](const std::string& suitToFind) {
+                auto find = std::find_if(std::begin(suits), std::end(suits), [&](const std::string& suit) {
+                    return suit == suitToFind;
+                });
+                return find != suits.end();
+            };
+
+            valid =
+                findSuit("C") &&
+                findSuit("D") &&
+                findSuit("H") &&
+                findSuit("S");
+
+        }
+        return valid;
+    }
 }
