@@ -23,6 +23,7 @@ namespace
         {
             std::cout << question;
             std::getline(std::cin, answer);
+            utilslib::StringUtils::trimString(answer);
 
             questionAnswered = validate(answer);
         }

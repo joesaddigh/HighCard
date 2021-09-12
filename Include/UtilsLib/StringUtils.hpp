@@ -16,5 +16,6 @@ namespace utilslib
 
         static StringSplit splitString(const std::string& str, char delimeter);
         static std::string toUpper(const std::string& str);
+        static void trimString(std::string& str);
     };
 }

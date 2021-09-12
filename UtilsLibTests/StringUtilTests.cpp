@@ -67,4 +67,40 @@ namespace utilslibtests
 		// ASSERT
 		ASSERT_EQ(upperStr, str);
 	}
+
+	TEST(StringUtilsTests, trimString_withSpaceL_spaceRemoved)
+	{
+		// ARRANGE
+		auto str = std::string{ "    FRED   ,BOB,STEVE" };
+
+		// ACT
+		ul::StringUtils::trimString(str);
+
+		// ASSERT
+		ASSERT_EQ(str, "FRED   ,BOB,STEVE");
+	}
+
+	TEST(StringUtilsTests, trimString_withSpaceR_spaceRemoved)
+	{
+		// ARRANGE
+		auto str = std::string{ "FRED,BOB,     S T E V E         " };
+
+		// ACT
+		ul::StringUtils::trimString(str);
+
+		// ASSERT
+		ASSERT_EQ(str, "FRED,BOB,     S T E V E");
+	}
+
+	TEST(StringUtilsTests, trimString_withSpaceLR_spaceRemoved)
+	{
+		// ARRANGE
+		auto str = std::string{ "           FRED,BOB,     S T E V E         " };
+
+		// ACT
+		ul::StringUtils::trimString(str);
+
+		// ASSERT
+		ASSERT_EQ(str, "FRED,BOB,     S T E V E");
+	}
 }
