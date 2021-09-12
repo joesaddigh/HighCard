@@ -13,7 +13,7 @@ namespace highcardlib
     template<
         typename DealerType = Dealer
     >
-        class HighCardGame
+    class HighCardGame
     {
     public:
 
