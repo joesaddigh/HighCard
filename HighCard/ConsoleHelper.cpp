@@ -31,6 +31,11 @@ namespace
         return answer;
     }
 
+    auto welcome()
+    {
+        std::cout << "Welcome to HIGH CARD. Before starting please help by confirming the rules you'd like to use." << std::endl;
+    }
+
     auto requestAndSetTieResolve(highcardlib::GameConfig& gameConfig)
     {
         static auto tieResolveMapping = std::unordered_map<std::string, highcardlib::GameConfig::TieResolveStrategy>{
@@ -165,6 +170,7 @@ void ConsoleHelper::printBanner()
 
 void ConsoleHelper::requestRules(highcardlib::GameConfig& gameConfig)
 {
+    welcome();
     requestAndSetTieResolve(gameConfig);
     requestAndSetTotalDecks(gameConfig);
     requestAndSetAddWildCard(gameConfig);
