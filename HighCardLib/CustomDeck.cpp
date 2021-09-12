@@ -3,6 +3,7 @@
 #include <array>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
 
 #include "HighCardLib/CustomDeck.hpp"
 
