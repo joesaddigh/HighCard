@@ -50,6 +50,9 @@ namespace highcardlib
             }
         }
 
+        const Player& getPlayerOne() const { return m_playerOne; }
+        const Player& getPlayerTwo() const { return m_playerTwo; }
+
         PlayResult play()
         {
             auto playResult = challengePlayers();
@@ -61,9 +64,6 @@ namespace highcardlib
 
             return playResult;
         }
-
-        const Player& getPlayerOne() const { return m_playerOne; }
-        const Player& getPlayerTwo() const { return m_playerTwo; }
 
     private:
 

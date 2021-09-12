@@ -11,6 +11,10 @@ namespace highcardlib
     CustomDeck::CustomDeck(int totalCardsPerSuit) :
         m_totalCardsPerSuit{ totalCardsPerSuit }
     {
+        if (m_totalCardsPerSuit <= 0)
+        {
+            throw std::invalid_argument("Can't create a custom deck of cards with no cards.");
+        }
     }
 
     void CustomDeck::createDeck()

@@ -7,76 +7,51 @@ namespace hc = highcardlib;
 namespace highcardlibtests
 {
 	// Constructor tests
-	//TEST(DealerTests, constructor_noParams_configIsInitialised)
-	//{
-	//	// ARRANGE && ACT
-	//	auto gameConfig = hc::GameConfig{};
+	TEST(DealerTests, constructor_zeroCards_throws)
+	{
+		// ARRANGE, ACT & ASSERT
+		ASSERT_THROW(
+			hc::Dealer(1, 0, false),
+			std::invalid_argument
+		);
+	}
 
-	//	// ASSERT
-	//	ASSERT_EQ(gameConfig.getTieResolveStrategy(), hc::GameConfig::TieResolveStrategy::allow);
-	//	ASSERT_EQ(gameConfig.getTotalDecks(), 0);
-	//	ASSERT_EQ(gameConfig.getAddWildcard(), false);
-	//	ASSERT_EQ(gameConfig.getTotalCardsPerSuit(), 0);
-	//	ASSERT_TRUE(gameConfig.getSuitPrecedence().empty());
-	//}
+	TEST(DealerTests, constructor_negativeCards_throws)
+	{
+		// ARRANGE, ACT & ASSERT
+		ASSERT_THROW(
+			hc::Dealer(1, -100, false),
+			std::invalid_argument
+		);
+	}
 
 	// Public function tests
+	TEST(DealerTests, dealCard_returnsACard)
+	{
+		// ARRANGE 
+		auto dealer = hc::Dealer(1, 13, false);
 
-	//TEST(DealerTests, gettersAndSetters_returnExpectedValues)
-	//{
-	//	// ARRANGE
-	//	constexpr auto tieResolveStrategy = hc::GameConfig::TieResolveStrategy::suitPrecedence;
-	//	constexpr auto totalDecks = 57;
-	//	constexpr auto addWildCard = true;
-	//	constexpr auto totalCardsPerSuit = 25;
-	//	auto suitPrecedenceToSet = hc::GameConfig::SuitPrecedence{			
-	//		{hc::Card::Suit::clubs, 1},
-	//		{hc::Card::Suit::diamonds, 2},
-	//		{hc::Card::Suit::spades, 3},
-	//		{hc::Card::Suit::hearts, 4},
-	//	};
+		// ACT
+		auto card = dealer.dealCard();
 
-	//	auto gameConfig = hc::GameConfig{};
+		// ASSERT
+		ASSERT_NE(card.getSuit(), hc::Card::Suit::undefined);
+		ASSERT_NE(card.getRank(), 0);
+	}
 
-	//	// ACT
-	//	gameConfig.setTieResolveStrategy(tieResolveStrategy);
-	//	gameConfig.setTotalDecks(totalDecks);
-	//	gameConfig.setAddWildcard(addWildCard);
-	//	gameConfig.setTotalCardsPerSuit(totalCardsPerSuit);
-	//	gameConfig.setSuitPrecedence(suitPrecedenceToSet);
+	TEST(DealerTests, dealCard_allCardsDealt_packShuffled)
+	{
+		// ARRANGE 
+		auto dealer = hc::Dealer(1, 13, false);
 
-	//	// ASSERT
-	//	ASSERT_EQ(gameConfig.getTieResolveStrategy(), tieResolveStrategy);
-	//	ASSERT_EQ(gameConfig.getTotalDecks(), totalDecks);
-	//	ASSERT_EQ(gameConfig.getAddWildcard(), addWildCard);
-	//	ASSERT_EQ(gameConfig.getTotalCardsPerSuit(), totalCardsPerSuit);
-	//	ASSERT_TRUE(
-	//		mapCompare<hc::GameConfig::SuitPrecedence>(gameConfig.getSuitPrecedence(), suitPrecedenceToSet)
-	//	);
-	//}
+		// ACT
+		for (auto cardIndex = 0; cardIndex < 200; cardIndex++)
+		{
+			auto card = dealer.dealCard();
 
-	//TEST(DealerTests, createDefault_returnsExpectedValues)
-	//{
-	//	// ARRANGE && ACT
-	//	auto gameConfig = hc::GameConfig::createDefault();
-
-	//	// ASSERT
-	//	ASSERT_EQ(gameConfig.getTieResolveStrategy(), hc::GameConfig::TieResolveStrategy::allow);
-	//	ASSERT_EQ(gameConfig.getTotalDecks(), 1);
-	//	ASSERT_EQ(gameConfig.getAddWildcard(), false);
-	//	ASSERT_EQ(gameConfig.getTotalCardsPerSuit(), 13);
-	//	ASSERT_TRUE(gameConfig.getSuitPrecedence().empty());
-	//}
-
-	//TEST(DealerTests, toString_returnsSomething)
-	//{
-	//	// ARRANGE
-	//	auto gameConfig = hc::GameConfig::createDefault();
-
-	//	// ACT
-	//	auto gameConfigString = gameConfig.toString();
-
-	//	// ASSERT
-	//	ASSERT_FALSE(gameConfigString.empty());
-	//}
+			// ASSERT
+			ASSERT_NE(card.getSuit(), hc::Card::Suit::undefined);
+			ASSERT_NE(card.getRank(), 0);
+		}
+	}
 }
