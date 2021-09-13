@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ConsoleHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HighCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6fe62a0a-7bc8-48fe-b90f-e21b5f1c2bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{bedd5fe3-e4d3-4eb7-b2c7-b35f5bdebdfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Workflows">
+      <UniqueIdentifier>{01457f22-85a2-4b6d-8235-de5a16125169}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConsoleHelper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.github\workflows\msbuild.yml">
+      <Filter>Workflows</Filter>
+    </None>
+  </ItemGroup>
+</Project>

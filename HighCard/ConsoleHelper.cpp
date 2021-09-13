@@ -18,7 +18,7 @@ namespace
         auto questionAnswered = false;
         std::string answer;
 
-        // Keep prompting the userthe validation has been fulfilled.
+        // Keep prompting the user until the validation has been fulfilled.
         while (!questionAnswered)
         {
             std::cout << question;
